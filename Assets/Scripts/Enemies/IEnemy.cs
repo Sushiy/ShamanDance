@@ -15,7 +15,7 @@ public abstract class IEnemy : MonoBehaviour {
     public int Stamina { get; set; }
     public ElementTypes ElementType {get; set; }
 
-    private SeekBehaviour seekBehaviour;
+    protected SeekBehaviour seekBehaviour;
 	// Use this for initialization
 	void Start () {
 
