@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/enemiesScene.unity.meta
 guid: 507f85d08c8a8544290bddd19b79f40d
-timeCreated: 1454171215
+timeCreated: 1454124379
+=======
+guid: f064dca4ab56fc746ad10695a070125e
+timeCreated: 1454170067
+>>>>>>> master:Assets/main.unity.meta
 licenseType: Free
 DefaultImporter:
   userData: 
