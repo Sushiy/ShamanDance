@@ -92,18 +92,18 @@ public class CharacterMovement : MonoBehaviour
 
         bool b = false;
         float axis = 0.0f;
-            if(Input.GetAxis("LeftTrigger") > 0.5)
-            {
-                sideSpeed = -1.0f * Time.fixedDeltaTime * movementSpeed;
-                b = true;
-                left = true;
-            }
-            if (Input.GetAxis("RightTrigger") > 0.5)
-            {
-                sideSpeed = 1.0f * Time.fixedDeltaTime * movementSpeed;
-                b = true;
-                left = false;
-            }
+        if(Input.GetAxis("LeftTrigger") > 0.5)
+        {
+            sideSpeed = -1.0f * Time.fixedDeltaTime * movementSpeed;
+            b = true;
+            left = true;
+        }
+        if (Input.GetAxis("RightTrigger") > 0.5)
+        {
+            sideSpeed = 1.0f * Time.fixedDeltaTime * movementSpeed;
+            b = true;
+            left = false;
+        }
 
         
         transform.position += new Vector3(sideSpeed/2, 0, 0);
