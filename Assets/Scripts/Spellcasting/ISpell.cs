@@ -12,10 +12,11 @@ public enum SpellType
 public abstract class ISpell : MonoBehaviour 
 {
 	// ATTRIBUTES
-	private   float _castRange;
-	private   bool  _isActivated;
-	private   float _activationTime;
-	private   bool  _finalize;
+	private float _castRange;
+	private bool _isActivated;
+	private float _activationTime;
+	private bool _finalize;
+	protected Vector3 _targetPosition;
 
 	// REFERENCES
 	private List<ISpell> _activeSpells;
@@ -38,7 +39,6 @@ public abstract class ISpell : MonoBehaviour
 				else {
 					_activationTime = Time.time;
 					_finalize = true;
-					Debug.Log ("Finalize");
 				}
 			} else {
 				// SPELL IS FINALIZING
@@ -57,9 +57,11 @@ public abstract class ISpell : MonoBehaviour
 
 	public void Activate(List<ISpell> activeSpells, Vector3 targetPosition)
 	{
+		transform.position = Camera.main.transform.position;
+
+		_targetPosition = targetPosition;
 		_activeSpells = activeSpells;
 		_activeSpells.Add (this);
-		transform.position = targetPosition;
 		_activationTime = Time.time;
 		_isActivated = true;
 		_finalize = false;
