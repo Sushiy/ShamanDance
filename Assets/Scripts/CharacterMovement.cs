@@ -7,7 +7,8 @@ public enum MovementState
     JUMPING,
     FALLING,
     CROUCHING,
-    DANCING
+    DANCING,
+    SWIMMING
 };
 
 [RequireComponent (typeof(Rigidbody2D))]
@@ -106,6 +107,19 @@ public class CharacterMovement : MonoBehaviour {
                 rigidbody.AddForce(new Vector2(jumpingSpeed / 4, jumpingSpeed / 2), ForceMode2D.Impulse);
                 currentState = MovementState.JUMPING;
             }
+
+            
+        }
+        if (GameObject.FindGameObjectWithTag("Water") != null )
+        {
+
+            if (currentState != MovementState.SWIMMING && GetComponent<BoxCollider2D>().IsTouching(GameObject.FindGameObjectWithTag("Water").GetComponent<BoxCollider2D>()))
+            {
+                GetComponent<BoxCollider2D>().enabled = false;
+                this.GetComponentInParent<CircleCollider2D>().enabled = true;
+                currentState = MovementState.SWIMMING;
+                Debug.Log("Swimming");
+            }
         }
     }
 
@@ -118,3 +132,4 @@ public class CharacterMovement : MonoBehaviour {
         Gizmos.DrawWireCube(b.center, b.size);
     }
 }
+
