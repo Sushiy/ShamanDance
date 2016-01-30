@@ -24,8 +24,6 @@ public class Spellcaster : MonoBehaviour {
 
 	private void castSpell(SpellType type, Vector3 targetLocation)
 	{
-		System.Type spellType = null;
-
 		ISpell spell = null;
 
 		switch (type) {

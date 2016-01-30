@@ -6,12 +6,12 @@ public class RainSpell : ISpell {
 	public override float spellDuration { get { return 10f; } }
 	public override float finalizeDuration { get { return 5f; } }
 
-	private ParticleSystem emitter;
+	private ParticleSystem rain;
 	private Animator cloud;
 
 	void Start()
 	{
-		emitter = GetComponentInChildren<ParticleSystem> (false);
+		rain = GetComponentInChildren<ParticleSystem> (false);
 		cloud = GetComponentInChildren<Animator> (false);
 		cloud.SetTrigger ("CreateCloud");
 	}
@@ -22,7 +22,9 @@ public class RainSpell : ISpell {
 
 	protected override void FinalizeFunction()
 	{
-		emitter.Stop ();
+		rain.Stop ();
 		cloud.SetTrigger ("DestroyCloud");
 	}
+
+
 }

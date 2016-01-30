@@ -1,0 +1,147 @@
+fileFormatVersion: 2
+guid: 165437aa951266b498e95697b0a24c77
+timeCreated: 1454165236
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Regen_splash_Sprite_0
+    21300002: Regen_splash_Sprite_1
+    21300004: Regen_splash_Sprite_2
+    21300006: Regen_splash_Sprite_3
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: Regen_splash_Sprite_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 256
+        height: 256
+      alignment: 9
+      pivot: {x: 0.5, y: 0.18}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 23, y: 17.919998}
+        - {x: -51, y: 17.919998}
+        - {x: -58, y: 15.919998}
+        - {x: -58, y: -10.080002}
+        - {x: -33, y: -19.080002}
+        - {x: 28, y: -19.080002}
+        - {x: 31, y: -17.080002}
+        - {x: 33, y: -5.080002}
+        - {x: 33, y: 10.919998}
+    - name: Regen_splash_Sprite_1
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 256
+        height: 256
+      alignment: 9
+      pivot: {x: 0.5, y: 0.18}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -46, y: 21.919998}
+        - {x: -58, y: 11.919998}
+        - {x: -58, y: -4.080002}
+        - {x: -45, y: -19.080002}
+        - {x: 21, y: -19.080002}
+        - {x: 33, y: -11.080002}
+        - {x: 33, y: 17.919998}
+        - {x: 32, y: 21.919998}
+    - name: Regen_splash_Sprite_2
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 256
+        height: 256
+      alignment: 9
+      pivot: {x: 0.5, y: 0.18}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 32, y: 25.919998}
+        - {x: -5, y: 29.919998}
+        - {x: -51, y: 29.919998}
+        - {x: -52, y: 27.919998}
+        - {x: -52, y: 15.919998}
+        - {x: -47, y: 13.919998}
+        - {x: -44, y: 13.919998}
+        - {x: -42, y: 14.919998}
+        - {x: -50, y: 10.919998}
+        - {x: -55, y: 4.919998}
+        - {x: -58, y: 1.9199982}
+        - {x: -58, y: -4.080002}
+        - {x: -42, y: -19.080002}
+        - {x: 24, y: -19.080002}
+        - {x: 29, y: -14.080002}
+        - {x: 33, y: -3.0800018}
+        - {x: 33, y: 23.919998}
+    - name: Regen_splash_Sprite_3
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 0
+        width: 256
+        height: 256
+      alignment: 9
+      pivot: {x: 0.5, y: 0.18}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -57, y: 29.919998}
+        - {x: -58, y: 28.919998}
+        - {x: -58, y: -7.080002}
+        - {x: -44, y: -19.080002}
+        - {x: 24, y: -19.080002}
+        - {x: 33, y: -14.080002}
+        - {x: 33, y: 23.919998}
+        - {x: 30, y: 29.919998}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
