@@ -10,9 +10,12 @@ public enum MovementState
 };
 
 [RequireComponent (typeof(Rigidbody2D))]
-public class CharacterMovement : MonoBehaviour {
+public class CharacterMovement : MonoBehaviour
+{
 
-    public float movementSpeed = 10f;
+    float sideSpeed = 0.0f;
+
+    public float movementSpeed = 0.25f;
     public float jumpingSpeed = 5f;
     public LayerMask ground_layers;
 
@@ -22,14 +25,20 @@ public class CharacterMovement : MonoBehaviour {
     public MovementState getCurrentState() { return currentState; }
 
     BoxCollider2D _collider;
-    
+
+    Animator anim;
+
     Rigidbody2D rigidbody;
+
+    bool left = false;
+    bool landed = false;
 
     // Use this for initialization
     void Start () {
         currentState = MovementState.GROUNDED;
         _collider = GetComponent<BoxCollider2D>();
         rigidbody = GetComponent<Rigidbody2D>();
+        anim = transform.GetChild(2).GetComponent<Animator>();
     }
 	
 	// Update is called once per frame
@@ -38,7 +47,7 @@ public class CharacterMovement : MonoBehaviour {
         // move left or right
         if (Input.GetAxis("Horizontal") > 0.1 || Input.GetAxis("Horizontal") < -0.1)
         {
-            float sideSpeed = Input.GetAxis("Horizontal") * Time.deltaTime * movementSpeed;
+            //float sideSpeed = Input.GetAxis("Horizontal") * Time.deltaTime * movementSpeed;
             //transform.position += new Vector3(sideSpeed, 0, 0);
         }
         // get playerSprite borders
@@ -48,15 +57,20 @@ public class CharacterMovement : MonoBehaviour {
         // jump  (Joystick Up or Button "A")
         if ((Input.GetButtonDown("Jump") && currentState == MovementState.GROUNDED) || (Input.GetAxis("Vertical") > 0.2f && currentState == MovementState.GROUNDED))
         {
-            //this.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, jumpingSpeed), ForceMode2D.Impulse);
+            anim.SetTrigger("Jump");
             currentState = MovementState.JUMPING;
         }
 
         if (currentState == MovementState.JUMPING && !Physics2D.OverlapArea(topLeft, bottomRight, ground_layers))
             currentState = MovementState.FALLING;
 
-        if ((currentState == MovementState.FALLING || currentState == MovementState.JUMPING) && Physics2D.OverlapArea(topLeft, bottomRight, ground_layers))
+        if (currentState == MovementState.FALLING && Physics2D.OverlapArea(topLeft, bottomRight, ground_layers))
+        {
             currentState = MovementState.GROUNDED;
+            anim.SetTrigger("Land");
+            landed = true;
+            sideSpeed *= 0.2f;
+        }
 
         // crouching (Joystick Down)
 
@@ -76,19 +90,29 @@ public class CharacterMovement : MonoBehaviour {
 
         }
 
-        if(isGrounded)
-        {
+        bool b = false;
+        float axis = 0.0f;
             if(Input.GetAxis("LeftTrigger") > 0.5)
             {
-                rigidbody.AddForce(new Vector2(-jumpingSpeed/4, jumpingSpeed/2), ForceMode2D.Impulse);
-                currentState = MovementState.JUMPING;
+                sideSpeed = -1.0f * Time.fixedDeltaTime * movementSpeed;
+                b = true;
+                left = true;
             }
             if (Input.GetAxis("RightTrigger") > 0.5)
             {
-                rigidbody.AddForce(new Vector2(jumpingSpeed / 4, jumpingSpeed / 2), ForceMode2D.Impulse);
-                currentState = MovementState.JUMPING;
+                sideSpeed = 1.0f * Time.fixedDeltaTime * movementSpeed;
+                b = true;
+                left = false;
             }
-        }
+
+        
+        transform.position += new Vector3(sideSpeed/2, 0, 0);
+        sideSpeed *= 0.75f;
+        anim.SetBool("isWalking", b);
+        if (left)
+            transform.localScale = new Vector3(-1, 1, 1);
+        else
+            transform.localScale = new Vector3(1, 1, 1);
     }
 
     void OnDrawGizmos()
@@ -98,5 +122,10 @@ public class CharacterMovement : MonoBehaviour {
         if (!isGrounded)
             Gizmos.color = Color.red;
         Gizmos.DrawWireCube(b.center, b.size);
+    }
+
+    public void Jump()
+    {
+        this.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, jumpingSpeed), ForceMode2D.Impulse);
     }
 }
