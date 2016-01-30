@@ -14,6 +14,12 @@ public class RainSpell : ISpell {
 		rain = GetComponentInChildren<ParticleSystem> (false);
 		cloud = GetComponentInChildren<Animator> (false);
 		cloud.SetTrigger ("CreateCloud");
+
+		Vector3 pos = transform.position;
+		pos.x = _targetPosition.x;
+		pos.y = Camera.main.transform.position.y + Camera.main.orthographicSize/2f - 1.2f;
+
+		transform.position = pos;
 	}
 
 	protected override void SpellFunction()
