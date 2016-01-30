@@ -17,7 +17,7 @@ public class Spellcaster : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetMouseButtonDown (0))
-			castSpell (SpellType.RAIN, new Vector3(0,0,0));
+			castSpell (SpellType.RAIN, Camera.main.ScreenToWorldPoint(Input.mousePosition));
 		if (Input.GetMouseButtonDown (1))
 			castSpell (SpellType.SUN, Camera.main.transform.position);
 	}
