@@ -6,23 +6,29 @@ public class WanderBehaviour : MonoBehaviour {
     private int wanderDirection; // -1 : left ; +1 : right
     private Vector3 desiredPosition;
     private float wanderDistance;
+    private SeekBehaviour seekBehaviour;
 
 	// Use this for initialization
 	void Start () {
         wanderDirection = 1;
         setNewDesiredPosition();
+
+        seekBehaviour = this.GetComponentInParent<SeekBehaviour>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-        transform.Translate(new Vector3( wanderDirection * Time.deltaTime, 0f, 0f));
-           
-        if (Vector3.Distance(desiredPosition, transform.position) >= wanderDistance )
+        if (!seekBehaviour.isPlayerInSight)
         {
-            if (wanderDirection == -1) wanderDirection = 1;
-            else if (wanderDirection == 1) wanderDirection = -1;
-            setNewDesiredPosition();
+            transform.Translate(new Vector3(wanderDirection * Time.deltaTime, 0f, 0f));
+
+            if (Vector3.Distance(desiredPosition, transform.position) >= wanderDistance)
+            {
+                if (wanderDirection == -1) wanderDirection = 1;
+                else if (wanderDirection == 1) wanderDirection = -1;
+                setNewDesiredPosition();
+            }
         }
 	}
 

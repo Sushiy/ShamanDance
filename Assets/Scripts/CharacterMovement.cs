@@ -46,9 +46,9 @@ public class CharacterMovement : MonoBehaviour {
         // move left or right
         if (Input.GetAxis("Horizontal") > 0.1 || Input.GetAxis("Horizontal") < -0.1)
         {
-            float sideSpeed = Input.GetAxis("Horizontal") * Time.fixedDeltaTime * movementSpeed * 4f; ;
+            float sideSpeed = Input.GetAxis("Horizontal") * Time.fixedDeltaTime * movementSpeed ;
 
-            Vector2 characterVelocity = new Vector2(rigidbody.transform.position.x * -sideSpeed, rigidbody.velocity.y); // where y is gravity 
+            Vector2 characterVelocity = new Vector2( sideSpeed, rigidbody.velocity.y); // where y is gravity 
             GetComponent<Rigidbody2D>().velocity = characterVelocity;
 
             //transform.position += new Vector3(sideSpeed, 0, 0);

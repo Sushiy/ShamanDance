@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum ElementTypes{
+public enum ElementTypes
+{
 
-    Water, Fire, Earth, Shadow
+    Fire, Sludge, Shadow
 };
 
 public abstract class IEnemy : MonoBehaviour {
@@ -14,26 +15,25 @@ public abstract class IEnemy : MonoBehaviour {
     public int Stamina { get; set; }
     public ElementTypes ElementType {get; set; }
 
-    // LookingAround Behaviour
-    // SeekingBehaviour
-
-    public IEnemy(ElementTypes type) {
-
-        stamina = 100;
-        elementType = type;
-
-    }
-
-
+    private SeekBehaviour seekBehaviour;
 	// Use this for initialization
 	void Start () {
-	
-	}
+
+        stamina = 100;
+        setElementType();
+        seekBehaviour = this.GetComponentInParent<SeekBehaviour>();
+        
+    }
 	
 	// Update is called once per frame
 	void Update () {
+
+        if (seekBehaviour.hasReachedPlayer)
+            attackPlayer();
+
 	
 	}
 
     public abstract void attackPlayer();
+    public abstract void setElementType();
 }
