@@ -1,7 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: d49efc02b375ded4d8b864081572b392
 folderAsset: yes
 timeCreated: 1454098806
+=======
+guid: 9340c17dbccfa7d4192cca2783190b04
+folderAsset: yes
+timeCreated: 1454106018
+>>>>>>> Spellcasting
 licenseType: Free
 DefaultImporter:
   userData: 

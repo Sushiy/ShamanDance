@@ -21,18 +21,22 @@ public class CharacterMovement : MonoBehaviour {
 
     public bool isGrounded { get { return currentState == MovementState.GROUNDED; } }
     public MovementState CurrentState { get; set; }
+
+
+    BoxCollider2D _collider;
     
-	// Use this for initialization
-	void Start () {
+    Rigidbody2D rigidbody;
+
+    // Use this for initialization
+    void Start () {
         currentState = MovementState.GROUNDED;
-	}
+        _collider = GetComponent<BoxCollider2D>();
+        rigidbody = GetComponent<Rigidbody2D>();
+    }
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        // get playerSprite borders
-        Vector2 topLeft = GameObject.Find("GroundHitCheckTopLeft").transform.position;
-        Vector2 bottomRight = GameObject.Find("GroundHitCheckBottomRight").transform.position;
-
+        
         /*float downspeed = 0f;// GetComponent<Rigidbody2D>().velocity.y*2;
            if (GetComponent<Rigidbody2D>().velocity.y > -0.1f && currentState != MovementState.GROUNDED) downspeed = -9.81f;
 
@@ -44,28 +48,32 @@ public class CharacterMovement : MonoBehaviour {
         {
             float sideSpeed = Input.GetAxis("Horizontal") * Time.fixedDeltaTime * movementSpeed * 4f; ;
 
-            Vector2 characterVelocity = new Vector2(GetComponent<Rigidbody2D>().transform.position.x * -sideSpeed, GetComponent<Rigidbody2D>().velocity.y); // where y is gravity 
-            GetComponent<Rigidbody2D>().velocity = characterVelocity; 
+            Vector2 characterVelocity = new Vector2(rigidbody.transform.position.x * -sideSpeed, rigidbody.velocity.y); // where y is gravity 
+            GetComponent<Rigidbody2D>().velocity = characterVelocity;
 
-           
-           // Vector3 newPosition = transform.position + new Vector3(sideSpeed, downspeed, 0);
-           //   GetComponent<Rigidbody2D>().MovePosition(newPosition);
-          
+            //transform.position += new Vector3(sideSpeed, 0, 0);
+            // Vector3 newPosition = transform.position + new Vector3(sideSpeed, downspeed, 0);
+            //   GetComponent<Rigidbody2D>().MovePosition(newPosition);
+
 
         }
-       
+    
+        // get playerSprite borders
+        
+        Vector2 topLeft = _collider.bounds.min;
+        Vector2 bottomRight = _collider.bounds.max;
         
         // jump  (Joystick Up or Button "A")
         if ((Input.GetButtonDown("Jump") && currentState == MovementState.GROUNDED) || (Input.GetAxis("Vertical") > 0.2f && currentState == MovementState.GROUNDED) )//&& downspeed == 0)
         {
-            this.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, jumpingSpeed), ForceMode2D.Impulse);
+            //this.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, jumpingSpeed), ForceMode2D.Impulse);
             currentState = MovementState.JUMPING;
         }
 
         if (currentState == MovementState.JUMPING && !Physics2D.OverlapArea(topLeft, bottomRight, ground_layers))
             currentState = MovementState.FALLING;
 
-        if (currentState == MovementState.FALLING && Physics2D.OverlapArea(topLeft, bottomRight, ground_layers))
+        if ((currentState == MovementState.FALLING || currentState == MovementState.JUMPING) && Physics2D.OverlapArea(topLeft, bottomRight, ground_layers))
             currentState = MovementState.GROUNDED;
 
         // crouching (Joystick Down)
@@ -85,5 +93,28 @@ public class CharacterMovement : MonoBehaviour {
             movementSpeed *= 2;
 
         }
+
+        if(isGrounded)
+        {
+            if(Input.GetAxis("LeftTrigger") > 0.5)
+            {
+                rigidbody.AddForce(new Vector2(-jumpingSpeed/4, jumpingSpeed/2), ForceMode2D.Impulse);
+                currentState = MovementState.JUMPING;
+            }
+            if (Input.GetAxis("RightTrigger") > 0.5)
+            {
+                rigidbody.AddForce(new Vector2(jumpingSpeed / 4, jumpingSpeed / 2), ForceMode2D.Impulse);
+                currentState = MovementState.JUMPING;
+            }
+        }
+    }
+
+    void OnDrawGizmos()
+    {
+        Bounds b = GetComponent<BoxCollider2D>().bounds;
+        Gizmos.color = Color.green;
+        if (!isGrounded)
+            Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(b.center, b.size);
     }
 }
