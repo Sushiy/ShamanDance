@@ -6,8 +6,8 @@ public class Spellcaster : MonoBehaviour {
 
 	private List<ISpell> _spellList;
 
-	public SunSpell sunSpellPrefab;
-	public RainSpell rainSpellPrefab;
+	public FireBallSpell fireBallSpellPrefab;
+	public RainSpell 	 rainSpellPrefab;
 
 	// Use this for initialization
 	void Start () {
@@ -19,7 +19,7 @@ public class Spellcaster : MonoBehaviour {
 		if (Input.GetMouseButtonDown (0))
 			castSpell (SpellType.RAIN, Camera.main.ScreenToWorldPoint(Input.mousePosition));
 		if (Input.GetMouseButtonDown (1))
-			castSpell (SpellType.SUN, Camera.main.transform.position);
+			castSpell (SpellType.FIRE, Camera.main.ScreenToWorldPoint(Input.mousePosition));
 	}
 
 	private void castSpell(SpellType type, Vector3 targetLocation)
@@ -27,8 +27,8 @@ public class Spellcaster : MonoBehaviour {
 		ISpell spell = null;
 
 		switch (type) {
-		case SpellType.SUN:
-			spell = Instantiate (sunSpellPrefab) as ISpell;
+		case SpellType.FIRE:
+			spell = Instantiate (fireBallSpellPrefab) as ISpell;
 			break;
 		case SpellType.RAIN:
 			spell = Instantiate (rainSpellPrefab) as ISpell;
@@ -37,6 +37,6 @@ public class Spellcaster : MonoBehaviour {
 			Debug.LogError ("Invalid Spell Type");
 			return;
 		}
-		spell.Activate (_spellList, targetLocation);
+		spell.Activate (_spellList, targetLocation, this.gameObject);
 	}
 }
