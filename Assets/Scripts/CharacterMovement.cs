@@ -6,122 +6,148 @@ public enum MovementState
     GROUNDED,
     JUMPING,
     FALLING,
-    CROUCHING,
     DANCING,
-    SWIMMING
+    DROWNING
 };
 
+
 [RequireComponent (typeof(Rigidbody2D))]
-public class CharacterMovement : MonoBehaviour {
+public class CharacterMovement : MonoBehaviour
+{
+	// private stuff
+	private Vector3 playerLeft = new Vector3 (-1f, 1f, 1f);
+	private Transform spawnPosition;
+	private MovementState currentState;
+	private BoxCollider2D _collider;
+	private Rigidbody2D rigidbody;
+	private ParticleSystem spawnEmitter;
+	private float drownTimer;
 
-    public float movementSpeed = 10f;
-    public float jumpingSpeed = 5f;
+	// public attributes for inspector
+    public float movementSpeed 	= 10f;
+    public float jumpingSpeed 	= 5f;
+	public float drownTime 		= 1f;
     public LayerMask ground_layers;
+	public LayerMask water_layers;
 
-    public MovementState currentState;
+	// PROPERTIES
+	public bool isGrounded 	 { get { return currentState == MovementState.GROUNDED; } }
+	public bool isJumping 	 { get { return currentState == MovementState.JUMPING;  } }
+	public bool isFalling 	 { get { return currentState == MovementState.FALLING;  } }
+	public bool isDancing 	 { get { return currentState == MovementState.DANCING;  } }
+	public bool isDrowning 	 { get { return currentState == MovementState.DROWNING; } }
+	public bool isTurnedLeft { get { return transform.localScale.x == -1f; 		  	} }
 
-    public bool isGrounded { get { return currentState == MovementState.GROUNDED; } }
-    public MovementState CurrentState { get; set; }
-
-
-    BoxCollider2D _collider;
-    
-    Rigidbody2D rigidbody;
 
     // Use this for initialization
-    void Start () {
+    void Start () 
+	{
+		// find spawnposition
+		spawnPosition = GameObject.Find ("SPAWN POSITION").transform;
+		if (spawnPosition == null) {
+			Debug.LogError ("NO SPAWN POSITION OBJECT");
+		}
+
+		// find spawn emitter
+		foreach (ParticleSystem p in GetComponentsInChildren<ParticleSystem>(false)) {
+			if (p.name == "Spawn") {
+				spawnEmitter = p;
+				break;
+			}
+		}
+
+		// init
         currentState = MovementState.GROUNDED;
         _collider = GetComponent<BoxCollider2D>();
         rigidbody = GetComponent<Rigidbody2D>();
+
+		// spawn player
+		Spawn ();
     }
-	
+
+	private void Spawn()
+	{
+		rigidbody.freezeRotation = true;
+		transform.position = spawnPosition.position;
+		transform.rotation = Quaternion.identity;
+		currentState = MovementState.GROUNDED;
+		rigidbody.velocity = new Vector2 (0f, 0f);
+
+		spawnEmitter.Play ();
+	}
+
 	// Update is called once per frame
-	void FixedUpdate () {
-        
-        /*float downspeed = 0f;// GetComponent<Rigidbody2D>().velocity.y*2;
-           if (GetComponent<Rigidbody2D>().velocity.y > -0.1f && currentState != MovementState.GROUNDED) downspeed = -9.81f;
+	void FixedUpdate () 
+	{
 
-        if (Input.GetKeyDown(KeyCode.F))
-            Debug.Log(downspeed);
-*/
-        // move left or right
-        if (Input.GetAxis("Horizontal") > 0.1 || Input.GetAxis("Horizontal") < -0.1)
-        {
-            float sideSpeed = Input.GetAxis("Horizontal") * Time.fixedDeltaTime * movementSpeed ;
+		// get playerSprite borders
+		Vector2 topLeft = _collider.bounds.min;
+		Vector2 bottomRight = _collider.bounds.max;
 
-            Vector2 characterVelocity = new Vector2( sideSpeed, rigidbody.velocity.y); // where y is gravity 
-            GetComponent<Rigidbody2D>().velocity = characterVelocity;
+		// ----------------------------- MOVEMENT STATES -----------------------------
 
-            //transform.position += new Vector3(sideSpeed, 0, 0);
-            // Vector3 newPosition = transform.position + new Vector3(sideSpeed, downspeed, 0);
-            //   GetComponent<Rigidbody2D>().MovePosition(newPosition);
+		// --- DROWNING ---
+		if (isDrowning) {
+			// - respawn -
+			if(Time.fixedTime > drownTimer+ drownTime) {
+				spawnEmitter.Play ();
+				currentState = MovementState.FALLING;
+				Invoke ("Spawn", 1f);
+			}
+			// do nothing more
+			return;
+		}
 
+		// --- GROUNDED ---
+		else if (isGrounded) {
+			// - jump -
+			if (Input.GetButtonDown ("Jump")) {
+				currentState = MovementState.JUMPING;
+				rigidbody.AddForce (new Vector2 (0f, jumpingSpeed / 2f), ForceMode2D.Impulse);
+			}
 
-        }
-    
-        // get playerSprite borders
-        
-        Vector2 topLeft = _collider.bounds.min;
-        Vector2 bottomRight = _collider.bounds.max;
-        
-        // jump  (Joystick Up or Button "A")
-        if ((Input.GetButtonDown("Jump") && currentState == MovementState.GROUNDED) || (Input.GetAxis("Vertical") > 0.2f && currentState == MovementState.GROUNDED) )//&& downspeed == 0)
-        {
-            //this.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, jumpingSpeed), ForceMode2D.Impulse);
-            currentState = MovementState.JUMPING;
-        }
+			// - crab walk -
+			float sideSpeed = 0;
+			// left
+			if (Input.GetAxis ("LeftTrigger") > 0.5) {
+				sideSpeed = -1f;
+				transform.localScale = playerLeft;
+			} 
+			// right
+			else if (Input.GetAxis ("RightTrigger") > 0.5) {
+				transform.localScale = Vector3.one;
+				sideSpeed = 1f;
+			}
+			Vector2 characterVelocity = new Vector2 (sideSpeed * movementSpeed, rigidbody.velocity.y); // where y is gravity 
+			GetComponent<Rigidbody2D> ().velocity = characterVelocity;
+		} 
 
-        if (currentState == MovementState.JUMPING && !Physics2D.OverlapArea(topLeft, bottomRight, ground_layers))
-            currentState = MovementState.FALLING;
+		// --- JUMPING ---
+		else if (isJumping) {
+			// - fall -
+			if (!Physics2D.OverlapArea (topLeft, bottomRight, ground_layers))
+				currentState = MovementState.FALLING;
+			else
+				currentState = MovementState.GROUNDED;
+		}
 
-        if ((currentState == MovementState.FALLING || currentState == MovementState.JUMPING) && Physics2D.OverlapArea(topLeft, bottomRight, ground_layers))
-            currentState = MovementState.GROUNDED;
+		// --- FALLING --
+		else if (isFalling) {
+			// - ground player -
+			if(Physics2D.OverlapArea(topLeft, bottomRight, ground_layers))
+            	currentState = MovementState.GROUNDED;
+		}
 
-        // crouching (Joystick Down)
-
-        if (Input.GetAxis("Vertical") < -0.2 && currentState == MovementState.GROUNDED)
-        {
-            // this.transform.localScale = new Vector3(1f, 0.5f, 1f);  replace Sprite
-            currentState = MovementState.CROUCHING;
-            movementSpeed /= 2;
-        }
-
-        // stand up
-        if (Input.GetAxis("Vertical") > -0.2 && currentState == MovementState.CROUCHING)
-        {
-            // this.transform.localScale = new Vector3(1f, 1f, 1f); replace Sprite
-            currentState = MovementState.GROUNDED;
-            movementSpeed *= 2;
-
-        }
-
-        if(isGrounded)
-        {
-            if(Input.GetAxis("LeftTrigger") > 0.5)
-            {
-                rigidbody.AddForce(new Vector2(-jumpingSpeed/4, jumpingSpeed/2), ForceMode2D.Impulse);
-                currentState = MovementState.JUMPING;
-            }
-            if (Input.GetAxis("RightTrigger") > 0.5)
-            {
-                rigidbody.AddForce(new Vector2(jumpingSpeed / 4, jumpingSpeed / 2), ForceMode2D.Impulse);
-                currentState = MovementState.JUMPING;
-            }
-
-            
-        }
-        if (GameObject.FindGameObjectWithTag("Water") != null )
-        {
-
-            if (currentState != MovementState.SWIMMING && GetComponent<BoxCollider2D>().IsTouching(GameObject.FindGameObjectWithTag("Water").GetComponent<BoxCollider2D>()))
-            {
-                GetComponent<BoxCollider2D>().enabled = false;
-                this.GetComponentInParent<CircleCollider2D>().enabled = true;
-                currentState = MovementState.SWIMMING;
-                Debug.Log("Swimming");
-            }
-        }
+		// THOUCH WATER --> DIE!!!!!!!
+		if (Physics2D.OverlapArea (topLeft, bottomRight, water_layers)) {
+			currentState = MovementState.DROWNING;
+			drownTimer = Time.fixedTime;
+			rigidbody.freezeRotation = false;
+		}
     }
+
+
+
 
     void OnDrawGizmos()
     {
