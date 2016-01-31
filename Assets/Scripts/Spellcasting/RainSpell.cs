@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent (typeof(AudioSource))]
 public class RainSpell : ISpell {
 
 	public override float spellDuration { get { return 10f; } }
@@ -15,6 +16,9 @@ public class RainSpell : ISpell {
 		cloud = GetComponentInChildren<Animator> (false);
 		cloud.SetTrigger ("CreateCloud");
 
+		if (_caster == null)
+			_caster = this.gameObject;
+
 		float characterLookDirection = (_caster.GetComponent<CharacterMovement> ().isTurnedLeft) ?
 			-5f : +5f;
 
@@ -23,6 +27,8 @@ public class RainSpell : ISpell {
 		pos.y = Camera.main.transform.position.y + Camera.main.orthographicSize/2f - 1.2f;
 
 		transform.position = pos;
+		GetComponent<AudioSource> ().Stop ();
+		GetComponent<AudioSource> ().PlayDelayed (2f);
 	}
 
 	protected override void SpellFunction()

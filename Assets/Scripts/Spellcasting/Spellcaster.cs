@@ -10,9 +10,13 @@ public class Spellcaster : MonoBehaviour {
 	public RainSpell 	 rainSpellPrefab;
     public WindSpell     windSpellPrefab;
 
+	public AudioClip successCastSound;
+
 	// Use this for initialization
 	void Start () {
 		_spellList = new List<ISpell> ();
+		if (successCastSound == null)
+			Debug.Log ("No sound selected for successful spellcast :(");
 	}
 	
 	// Update is called once per frame
@@ -46,7 +50,10 @@ public class Spellcaster : MonoBehaviour {
 			Debug.LogError ("Invalid Spell Type");
 			return;
 		}
-        if(spell != null)
-		    spell.Activate (_spellList, targetLocation, this.gameObject);
+		if (spell != null) {
+			if (successCastSound != null) 
+				AudioSource.PlayClipAtPoint (successCastSound, Camera.main.transform.position);
+			spell.Activate (_spellList, targetLocation, this.gameObject);
+		}
 	}
 }
