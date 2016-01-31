@@ -87,6 +87,8 @@ public class CharacterMovement : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate () 
 	{
+		Camera.main.transform.position = Vector3.Lerp (Camera.main.transform.position, transform.position + Vector3.back*10f, Time.fixedDeltaTime*2.5f);
+
 
 		// get playerSprite borders
         Vector2 bottomLeft = _collider.bounds.min + Vector3.down * GetComponent<CircleCollider2D>().radius*1.1f;
