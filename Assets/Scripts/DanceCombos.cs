@@ -19,13 +19,14 @@ public class DanceCombos : MonoBehaviour
     bool changed = false;
     bool resetted = false;
 
-    int bufferSize = 4;
+    int bufferSize = 3;
     List<DancePose> buffer;
     int currentIndex = 0;
 
     int hitCounter = 0;
 
     DancingArms arms;
+    Spellcaster spellcaster;
 
     [SerializeField]
     CirculateParticles successCircle;
@@ -35,9 +36,9 @@ public class DanceCombos : MonoBehaviour
     DancePose[] currentSpell;
     int currentSlot;
 
-    DancePose[] rain = { new DancePose(270, 90), new DancePose(90, 270), new DancePose(0, 0), new DancePose(180, 180) };
-    DancePose[] fire = { new DancePose(180, 180), new DancePose(90, 270), new DancePose(0, 0), new DancePose(180, 180) };
-    DancePose[] wind = { new DancePose(0, 0), new DancePose(0, 0), new DancePose(0, 0), new DancePose(0, 0) };
+    DancePose[] rain = { new DancePose(270, 90), new DancePose(90, 270), new DancePose(0, 0)};
+    DancePose[] fire = { new DancePose(0, 180), new DancePose(180, 0), new DancePose(0, 90)};
+    DancePose[] wind = { new DancePose(0, 0), new DancePose(0, 0), new DancePose(0, 0)};
 
     // Use this for initialization
     void Start()
@@ -46,6 +47,7 @@ public class DanceCombos : MonoBehaviour
         beatTime = 60 / bpm;
         InvokeRepeating("PermanentClock", beatTime / 2, beatTime+0.02f);
         arms = GetComponent<DancingArms>();
+        spellcaster = GetComponent<Spellcaster>();
     }
 
     // Update is called once per frame
@@ -95,7 +97,7 @@ public class DanceCombos : MonoBehaviour
         //if the first pose is part of a dance check the other poses
         if (current != null)
         {
-            if (pos > 0 && !current[pos].IsPoseHit(buffer[pos].left, buffer[pos].right, true))
+            if (pos > 0 && pos < current.Length && !current[pos].IsPoseHit(buffer[pos].left, buffer[pos].right, true))
             {
                 ReorderBuffer(pos);
                 return;
@@ -103,8 +105,10 @@ public class DanceCombos : MonoBehaviour
             
             hitCounter = pos;
             successCircle.RingEffect();
-            if (pos == current.Length-1)
-                Debug.Log("finished a combo");
+            if (pos == current.Length - 1)
+            {
+                spellcaster.castSpell(SpellType.FIRE, Vector3.zero);
+            }
         }
         else if(pos > 1)
         {
@@ -120,44 +124,6 @@ public class DanceCombos : MonoBehaviour
         buffer.Clear();
         buffer.Add(tmp);
         CheckForCombo(0);
-    }
-    
-
-    void fail()
-    {
-        //Debug.Log("missed the beat!");
-        CancelInvoke("AllowPose");
-        hitCounter = 0;
-        buffer.Clear();
-        Invoke("restart", beatTime);
-        startedPosing = false;
-        failCircle.RingEffect();
-    }
-
-    void restart()
-    {
-        poseAllowed = true;
-    }
-
-
-    bool FindSpellbeginning(float l, float r)
-    {
-        if (rain[0].IsPoseHit(l, r))
-        {
-            currentSpell = rain;
-            return true;
-        }
-        else if(fire[0].IsPoseHit(l, r))
-        {
-            currentSpell = fire;
-            return true;
-        }
-        else if(wind[0].IsPoseHit(l, r))
-        {
-            currentSpell = wind;
-            return true;
-        }
-        return false;
     }
 
 }

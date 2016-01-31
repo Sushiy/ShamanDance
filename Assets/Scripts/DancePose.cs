@@ -28,14 +28,14 @@ public class DancePose
     {
         float a = 180 - Mathf.Abs(Mathf.Abs(this.left - left) - 180);
         float b = 180 - Mathf.Abs(Mathf.Abs(this.right - right) - 180);
-        if (debug)
-            Debug.Log(left + "|" + right + "/" + this.left + "|" + this.right + ">>>" + a + "/" + b);
+        //if (debug)
+            //Debug.Log(left + "|" + right + "/" + this.left + "|" + this.right + ">>>" + a + "/" + b);
         return (a < AllowedAngleDeviation && b < AllowedAngleDeviation);
     }
 
     public bool IsPoseHitVec(Vector2 left, Vector2 right)
     {
-        Debug.Log("left" + left.ToString() + " right" + right.ToString());
+        //Debug.Log("left" + left.ToString() + " right" + right.ToString());
         return (Vector2.Angle(left, lVec) <= AllowedAngleDeviation && Vector2.Angle(right, rVec) <= AllowedAngleDeviation);
     }
 }
