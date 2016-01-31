@@ -102,7 +102,7 @@ public class CharacterMovement : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate () 
 	{
-		Camera.main.transform.position = Vector3.Lerp (Camera.main.transform.position, transform.position + Vector3.back*10f, Time.fixedDeltaTime*2.5f);
+		//Camera.main.transform.position = Vector3.Lerp (Camera.main.transform.position, transform.position + Vector3.back*10f, Time.fixedDeltaTime*2.5f);
 
 
 		// get playerSprite borders
@@ -140,23 +140,25 @@ public class CharacterMovement : MonoBehaviour
                 _anim.SetTrigger("Jump");
 				currentState = MovementState.JUMPING;
 			}
-
+            bool walking = false;
 			// - crab walk -
 			float sideSpeed = 0;
 			// left
 			if (Input.GetAxis ("LeftTrigger") > 0.5 || Input.GetButton("LeftTrigger")) {
 				sideSpeed = -1f;
 				transform.localScale = playerLeft;
-                _anim.SetBool("left", true);
-                _anim.SetBool("isWalking", true);
+                walking = true;
             } 
+
 			// right
 			else if (Input.GetAxis ("RightTrigger") > 0.5 || Input.GetButton("RightTrigger")) {
 				transform.localScale = Vector3.one;
 				sideSpeed = 1f;
-                _anim.SetBool("isWalking", true);
+                walking = true;
             }
-			Vector2 characterVelocity = new Vector2 (sideSpeed * movementSpeed, rigidbody.velocity.y); // where y is gravity 
+
+            _anim.SetBool("isWalking", walking);
+            Vector2 characterVelocity = new Vector2 (sideSpeed * movementSpeed, rigidbody.velocity.y); // where y is gravity 
 			GetComponent<Rigidbody2D> ().velocity = characterVelocity;
 		} 
 
