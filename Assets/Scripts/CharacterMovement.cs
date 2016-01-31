@@ -88,7 +88,7 @@ public class CharacterMovement : MonoBehaviour
 		Spawn ();
     }
 
-	private void Spawn()
+	public void Spawn()
 	{
 		rigidbody.freezeRotation = true;
 		transform.position = new Vector3(spawnPosition.position.x, spawnPosition.position.y, 0f);
