@@ -42,9 +42,12 @@ public class CharacterMovement : MonoBehaviour
     void Start () 
 	{
 		// find spawnposition
-		spawnPosition = GameObject.Find ("SPAWN POSITION").transform;
-		if (spawnPosition == null) {
-			Debug.LogError ("NO SPAWN POSITION OBJECT");
+		GameObject spawn = GameObject.Find ("SPAWN POSITION");
+		if (spawn == null) {
+			Debug.LogError ("NO SPAWN POSITION OBJECT! Spawn at Camera center");
+			spawnPosition = Camera.main.transform;
+		} else {
+			spawnPosition = spawn.transform;
 		}
 
 		// find spawn emitter
@@ -55,6 +58,12 @@ public class CharacterMovement : MonoBehaviour
 			}
 		}
 
+		if (ground_layers == null)
+			Debug.LogError ("GroundLayer not set in CharacterMovement component");
+
+		if (water_layers == null)
+			Debug.LogError ("WaterLayer not set in CharacterMovement component");
+		
 		// init
         currentState = MovementState.GROUNDED;
         _collider = GetComponent<BoxCollider2D>();
@@ -67,7 +76,7 @@ public class CharacterMovement : MonoBehaviour
 	private void Spawn()
 	{
 		rigidbody.freezeRotation = true;
-		transform.position = spawnPosition.position;
+		transform.position = new Vector3(spawnPosition.position.x, spawnPosition.position.y, 0f);
 		transform.rotation = Quaternion.identity;
 		currentState = MovementState.GROUNDED;
 		rigidbody.velocity = new Vector2 (0f, 0f);
