@@ -4,25 +4,25 @@ using System.Collections.Generic;
 
 public enum SpellType 
 { 
-	SUN,
-	RAIN
+	FIRE,
+	RAIN,
+	WIND
 };
 
 // INTERFACE FOR SPELLS
 public abstract class ISpell : MonoBehaviour 
 {
 	// ATTRIBUTES
-	private float _castRange;
 	private bool _isActivated;
 	private float _activationTime;
 	private bool _finalize;
 	protected Vector3 _targetPosition;
+	protected GameObject _caster;
 
 	// REFERENCES
 	private List<ISpell> _activeSpells;
 
 	// PROPERTIES
-	public float castRange { get { return _castRange; } }
 	public bool isActivated { get { return _isActivated; } }
 	public abstract float spellDuration { get; }
 	public abstract float finalizeDuration { get; }
@@ -37,8 +37,7 @@ public abstract class ISpell : MonoBehaviour
 				}
 				// SWITCH TO FINALIZE
 				else {
-					_activationTime = Time.time;
-					_finalize = true;
+					Finalize ();
 				}
 			} else {
 				// SPELL IS FINALIZING
@@ -55,10 +54,18 @@ public abstract class ISpell : MonoBehaviour
 		}
 	}
 
-	public void Activate(List<ISpell> activeSpells, Vector3 targetPosition)
+	protected void Finalize ()
+	{
+		_activationTime = Time.time;
+		_finalize = true;
+	}
+
+
+	public void Activate(List<ISpell> activeSpells, Vector3 targetPosition, GameObject caster)
 	{
 		transform.position = new Vector3(0,0,0);
 
+		_caster = caster;
 		_targetPosition = targetPosition;
 		_activeSpells = activeSpells;
 		_activeSpells.Add (this);
