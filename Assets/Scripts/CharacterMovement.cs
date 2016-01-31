@@ -69,8 +69,12 @@ public class CharacterMovement : MonoBehaviour
         currentState = MovementState.GROUNDED;
         _collider = GetComponent<BoxCollider2D>();
         rigidbody = GetComponent<Rigidbody2D>();
-        _anim = transform.GetChild(1).GetComponent<Animator>();
-
+		foreach (Animator a in GetComponentsInChildren<Animator>()) {
+			if(a.name == "IK")
+				_anim = a;
+		}
+		if (_anim == null)
+			Debug.LogError ("AnimationController from IK in CharacterMovement not found");
 		// spawn player
 		Spawn ();
     }

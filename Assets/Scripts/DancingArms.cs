@@ -24,9 +24,14 @@ public class DancingArms : MonoBehaviour
     Vector2 lVector;
     Vector2 rVector;
 
+	CharacterMovement character;
+
     // Use this for initialization
     void Start ()
     {
+		character = GameObject.FindWithTag ("Player").GetComponent<CharacterMovement> ();
+		if (character == null)
+			Debug.LogError ("Character with \"Player\" tag not found");
         combo = GetComponent<DanceCombos>();
 	}
 	
@@ -39,11 +44,21 @@ public class DancingArms : MonoBehaviour
         float rx = Input.GetAxis("Rx");
         float ry = -Input.GetAxis("Ry");
         
-        leftHandT.localPosition = Vector3.Lerp(leftHandT.localPosition, leftIdleT.localPosition + radius * new Vector3(lx, ly, 0), Time.deltaTime * speed);
-        rightHandT.localPosition = Vector3.Lerp(rightHandT.localPosition, rightIdleT.localPosition + radius * new Vector3(rx, ry, 0), Time.deltaTime * speed);
+		if (character.isTurnedLeft) {
+			leftHandT.localPosition = Vector3.Lerp(leftHandT.localPosition, leftIdleT.localPosition + radius * new Vector3(-rx, ry, 0), Time.deltaTime * speed);
+			rightHandT.localPosition = Vector3.Lerp(rightHandT.localPosition, rightIdleT.localPosition + radius * new Vector3(-lx, ly, 0), Time.deltaTime * speed);
 
-        lVector = new Vector2(lx, ly);
-        rVector = new Vector2(rx, ry);
+			lVector = new Vector2(lx, ly);
+			rVector = new Vector2(rx, ry);
+		} else {
+			leftHandT.localPosition = Vector3.Lerp(leftHandT.localPosition, leftIdleT.localPosition + radius * new Vector3(lx, ly, 0), Time.deltaTime * speed);
+			rightHandT.localPosition = Vector3.Lerp(rightHandT.localPosition, rightIdleT.localPosition + radius * new Vector3(rx, ry, 0), Time.deltaTime * speed);
+
+			lVector = new Vector2(lx, ly);
+			rVector = new Vector2(rx, ry);
+		}
+
+
         
     }
 
