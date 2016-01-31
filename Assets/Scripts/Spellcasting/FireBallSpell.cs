@@ -68,9 +68,12 @@ public class FireBallSpell : ISpell {
 
 	private Vector3 CalculateFireBallHit()
 	{
-		Vector3 target = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-		if(Vector3.Distance(transform.position, target) > castRange)
+        
+        Vector3 target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        if (Vector3.Distance(transform.position, target) > castRange)
 			target = Vector3.Normalize (target) * castRange;
-		return target;
+
+        return target;
 	}
 }

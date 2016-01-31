@@ -7,6 +7,10 @@ public enum ElementTypes
     Fire, Sludge, Shadow
 };
 
+[RequireComponent(typeof(CircleCollider2D))]
+[RequireComponent(typeof(SeekBehaviour))]
+[RequireComponent(typeof(WanderBehaviour))]
+[RequireComponent(typeof(Spellcaster))]
 public abstract class IEnemy : MonoBehaviour {
 
     private int stamina; //health points
@@ -16,12 +20,14 @@ public abstract class IEnemy : MonoBehaviour {
     public ElementTypes ElementType {get; set; }
 
     protected SeekBehaviour seekBehaviour;
+    protected Spellcaster spellcaster;
 	// Use this for initialization
 	void Start () {
 
         stamina = 100;
         setElementType();
         seekBehaviour = this.GetComponentInParent<SeekBehaviour>();
+        spellcaster = this.GetComponentInParent<Spellcaster>();
         
     }
 	
