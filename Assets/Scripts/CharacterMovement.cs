@@ -89,10 +89,18 @@ public class CharacterMovement : MonoBehaviour
 	{
 
 		// get playerSprite borders
-		Vector2 topLeft = _collider.bounds.min;
-		Vector2 bottomRight = _collider.bounds.max;
+        Vector2 bottomLeft = _collider.bounds.min + Vector3.down * GetComponent<CircleCollider2D>().radius*1.1f;
+        Vector2 topRight = (Vector3) bottomLeft + _collider.size.x * Vector3.right + 0.5f * Vector3.up;
 
 		// ----------------------------- MOVEMENT STATES -----------------------------
+
+
+        // THOUCH WATER --> DIE!!!!!!!
+        if (Physics2D.OverlapArea(topRight, bottomLeft, water_layers) || (isFalling && rigidbody.velocity.y > 100f)) {
+            currentState = MovementState.DROWNING;
+            drownTimer = Time.fixedTime;
+            rigidbody.freezeRotation = false;
+        }
 
 		// --- DROWNING ---
 		if (isDrowning) {
@@ -133,27 +141,18 @@ public class CharacterMovement : MonoBehaviour
 		// --- JUMPING ---
 		else if (isJumping) {
 			// - fall -
-			if (!Physics2D.OverlapArea (topLeft, bottomRight, ground_layers))
+			//if (!Physics2D.OverlapArea (topLeft, bottomRight, ground_layers) ) // Muss EVTL wieder rein? Testen?
 				currentState = MovementState.FALLING;
 		}
 
 		// --- FALLING --
 		else if (isFalling) {
 			// - ground player -
-			if(Physics2D.OverlapArea(topLeft, bottomRight, ground_layers))
+			if(Physics2D.OverlapArea(topRight, bottomLeft, ground_layers))
             	currentState = MovementState.GROUNDED;
 		}
 
-		// THOUCH WATER --> DIE!!!!!!!
-			if (Physics2D.OverlapArea (topLeft, bottomRight, water_layers) || (isFalling && rigidbody.velocity.y > 100f)) {
-			currentState = MovementState.DROWNING;
-			drownTimer = Time.fixedTime;
-			rigidbody.freezeRotation = false;
-		}
     }
-
-
-
 
     void OnDrawGizmos()
     {
@@ -162,6 +161,11 @@ public class CharacterMovement : MonoBehaviour
         if (!isGrounded)
             Gizmos.color = Color.red;
         Gizmos.DrawWireCube(b.center, b.size);
+
+        //Vector2 bottomRight = _collider.bounds.min + Vector3.down * GetComponent<CircleCollider2D>().radius * 1.1f;
+        //Vector2 topLeft = (Vector3)bottomRight + _collider.size.x * Vector3.right + 0.5f * Vector3.up;
+        //Gizmos.DrawCube(bottomRight, Vector3.one * 0.5f);
+        //Gizmos.DrawCube(topLeft, Vector3.one * 0.5f);
     }
 }
 
