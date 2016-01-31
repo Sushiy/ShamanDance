@@ -19,7 +19,7 @@ public class DanceCombos : MonoBehaviour
     bool changed = false;
     bool resetted = false;
 
-    int bufferSize = 3;
+    int bufferSize = 4;
     List<DancePose> buffer;
     int currentIndex = 0;
 
@@ -36,9 +36,9 @@ public class DanceCombos : MonoBehaviour
     DancePose[] currentSpell;
     int currentSlot;
 
-    DancePose[] rain = { new DancePose(270, 90), new DancePose(90, 270), new DancePose(0, 0)};
+    DancePose[] rain = { new DancePose(270, 90), new DancePose(0, 0), new DancePose(180, 180)};
     DancePose[] fire = { new DancePose(0, 180), new DancePose(180, 0), new DancePose(0, 90)};
-    DancePose[] wind = { new DancePose(0, 0), new DancePose(0, 0), new DancePose(0, 0)};
+    DancePose[] wind = { new DancePose(0, 90), new DancePose(90, 90), new DancePose(180, 90), new DancePose(270, 90)};
 
     // Use this for initialization
     void Start()
@@ -77,20 +77,21 @@ public class DanceCombos : MonoBehaviour
 
     void CheckForCombo(int pos)
     {
+        SpellType t = SpellType.NULL;
         DancePose[] current = null;
         if (rain[0].IsPoseHit(buffer[0].left, buffer[0].right))
         {
-            Debug.Log("rain");
+            t = SpellType.RAIN;
             current = rain;
         }
         else if (fire[0].IsPoseHit(buffer[0].left, buffer[0].right))
         {
-            Debug.Log("fire");
+            t = SpellType.FIRE;
             current = fire;
         }
         else if (wind[0].IsPoseHit(buffer[0].left, buffer[0].right))
         {
-            Debug.Log("wind");
+            t = SpellType.WIND;
             current = wind;
         }
 
@@ -107,7 +108,7 @@ public class DanceCombos : MonoBehaviour
             successCircle.RingEffect();
             if (pos == current.Length - 1)
             {
-                spellcaster.castSpell(SpellType.FIRE, Vector3.zero);
+                spellcaster.castSpell(t, Vector2.zero);
             }
         }
         else if(pos > 1)
