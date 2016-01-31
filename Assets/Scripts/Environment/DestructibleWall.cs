@@ -4,25 +4,23 @@ using System;
 
 public class DestructibleWall : MonoBehaviour, ISpellTarget
 {
+    [SerializeField]
+    Sprite brokenSprite;
+    [SerializeField]
+    Sprite fineSprite;
+
     public void TakeSpell(SpellType spellType)
     {
         if(spellType == SpellType.FIRE)
         {
             transform.GetChild(0).GetComponent<ParticleSystem>().Play();
-            GetComponent<SpriteRenderer>().enabled = false;
-            Debug.Log("Kaboom");
+            Invoke("BurnDown", 2f);
         }
     }
 
-    // Use this for initialization
-    void Start ()
+    void BurnDown()
     {
-	
-	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
-	
-	}
+        GetComponent<SpriteRenderer>().sprite = brokenSprite;
+        GetComponent<BoxCollider2D>().isTrigger = true;
+    }
 }
