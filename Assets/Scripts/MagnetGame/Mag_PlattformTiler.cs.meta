@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 2eae77948288edd43971f0ed9a1f1c3f
+timeCreated: 1450039151
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - leftStand: {fileID: 125158, guid: 3e06a60c9f226404bb051296acd3af88, type: 2}
+  - leftFree: {fileID: 160978, guid: c305e01082ad4f540a8049745ac46e0d, type: 2}
+  - leftMount: {fileID: 198910, guid: 05c6cc69e314b634ba850362c265f158, type: 2}
+  - mid: {fileID: 136220, guid: 8b5723da80d8e3e4fa8eaa5dfce48bfc, type: 2}
+  - rightStand: {fileID: 154104, guid: ad61729a016557f4b85a1160c8cbbf2a, type: 2}
+  - rightFree: {fileID: 120606, guid: 41f6580563cb5e942957636f4f34e943, type: 2}
+  - rightMount: {fileID: 121560, guid: c02d476c4c62739448d507c1c35806b5, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
