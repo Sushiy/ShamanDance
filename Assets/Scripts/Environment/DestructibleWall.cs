@@ -22,5 +22,7 @@ public class DestructibleWall : MonoBehaviour, ISpellTarget
     {
         GetComponent<SpriteRenderer>().sprite = brokenSprite;
         GetComponent<BoxCollider2D>().isTrigger = true;
+
+        transform.GetChild(1).GetComponent<ParticleSystem>().Play();
     }
 }
