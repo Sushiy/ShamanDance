@@ -69,7 +69,7 @@ public class CharacterMovement : MonoBehaviour
         currentState = MovementState.GROUNDED;
         _collider = GetComponent<BoxCollider2D>();
         rigidbody = GetComponent<Rigidbody2D>();
-        _anim = GetComponent<Animator>();
+        _anim = transform.GetChild(1).GetComponent<Animator>();
 
 		// spawn player
 		Spawn ();
@@ -130,6 +130,7 @@ public class CharacterMovement : MonoBehaviour
 			if (Input.GetAxis ("LeftTrigger") > 0.5 || Input.GetButton("LeftTrigger")) {
 				sideSpeed = -1f;
 				transform.localScale = playerLeft;
+                _anim.SetBool("left", true);
                 _anim.SetBool("isWalking", true);
             } 
 			// right
