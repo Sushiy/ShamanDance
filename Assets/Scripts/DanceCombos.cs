@@ -9,7 +9,7 @@ public class DanceCombos : MonoBehaviour
     AudioSource audio;
 
     float timer = 0.0f;
-    float bpm = 124;
+    float bpm = 120;
     float beatTime;
 
     bool poseAllowed = true;
@@ -19,7 +19,7 @@ public class DanceCombos : MonoBehaviour
     bool changed = false;
     bool resetted = false;
 
-    int bufferSize = 4;
+    int bufferSize = 3;
     List<DancePose> buffer;
     int currentIndex = 0;
 
@@ -38,7 +38,7 @@ public class DanceCombos : MonoBehaviour
 
     DancePose[] rain = { new DancePose(270, 90), new DancePose(0, 0), new DancePose(180, 180)};
     DancePose[] fire = { new DancePose(0, 180), new DancePose(180, 0), new DancePose(0, 90)};
-    DancePose[] wind = { new DancePose(0, 90), new DancePose(90, 90), new DancePose(180, 90), new DancePose(270, 90)};
+    DancePose[] wind = { new DancePose(0, 0), new DancePose(270, 270), new DancePose(90, 90)};
 
     // Use this for initialization
     void Start()

@@ -26,7 +26,7 @@ public class WindSpell : ISpell {
         {
             Vector3 target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-            Vector3 dir = target - transform.position;
+            Vector3 dir = transform.right;
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
             forceDirection = dir.x > 0 ? -1 : 1;
