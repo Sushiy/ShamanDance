@@ -6,7 +6,6 @@ public enum MovementState
     GROUNDED,
     JUMPING,
     FALLING,
-    DANCING,
     DROWNING
 };
 
@@ -34,7 +33,6 @@ public class CharacterMovement : MonoBehaviour
 	public bool isGrounded 	 { get { return currentState == MovementState.GROUNDED; } }
 	public bool isJumping 	 { get { return currentState == MovementState.JUMPING;  } }
 	public bool isFalling 	 { get { return currentState == MovementState.FALLING;  } }
-	public bool isDancing 	 { get { return currentState == MovementState.DANCING;  } }
 	public bool isDrowning 	 { get { return currentState == MovementState.DROWNING; } }
 	public bool isTurnedLeft { get { return transform.localScale.x == -1f; 		  	} }
 
@@ -109,12 +107,12 @@ public class CharacterMovement : MonoBehaviour
 			// - crab walk -
 			float sideSpeed = 0;
 			// left
-			if (Input.GetAxis ("LeftTrigger") > 0.5) {
+			if (Input.GetAxis ("LeftTrigger") > 0.5 || Input.GetButton("LeftTrigger")) {
 				sideSpeed = -1f;
 				transform.localScale = playerLeft;
 			} 
 			// right
-			else if (Input.GetAxis ("RightTrigger") > 0.5) {
+			else if (Input.GetAxis ("RightTrigger") > 0.5 || Input.GetButton("RightTrigger")) {
 				transform.localScale = Vector3.one;
 				sideSpeed = 1f;
 			}
