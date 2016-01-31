@@ -33,7 +33,7 @@ public class SeekBehaviour : MonoBehaviour {
             direction = movingDirection.x < 0 ? -1 : 1;
             _isMovingForward = true;
             _hasReachedPlayer = false;
-            if (movingDirection.magnitude <= 4) {
+            if (movingDirection.magnitude <= 8) {
                 _isMovingForward = false;
                 _hasReachedPlayer = true;
             }

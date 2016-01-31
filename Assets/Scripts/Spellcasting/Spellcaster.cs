@@ -25,24 +25,28 @@ public class Spellcaster : MonoBehaviour {
             castSpell(SpellType.WIND, Camera.main.ScreenToWorldPoint(Input.mousePosition));
     }
 
-	private void castSpell(SpellType type, Vector3 targetLocation)
+	public void castSpell(SpellType type, Vector3 targetLocation)
 	{
 		ISpell spell = null;
 
 		switch (type) {
 		case SpellType.FIRE:
-			spell = Instantiate (fireBallSpellPrefab) as ISpell;
+            if(fireBallSpellPrefab != null)
+                 spell = Instantiate (fireBallSpellPrefab) as ISpell;
 			break;
 		case SpellType.RAIN:
-			spell = Instantiate (rainSpellPrefab) as ISpell;
+            if(rainSpellPrefab != null)
+               spell = Instantiate (rainSpellPrefab) as ISpell;
 			break;
         case SpellType.WIND:
-             spell = Instantiate(windSpellPrefab) as ISpell;
+            if (windSpellPrefab != null)
+                spell = Instantiate(windSpellPrefab) as ISpell;
              break;
 		default:
 			Debug.LogError ("Invalid Spell Type");
 			return;
 		}
-		spell.Activate (_spellList, targetLocation, this.gameObject);
+        if(spell != null)
+		    spell.Activate (_spellList, targetLocation, this.gameObject);
 	}
 }
