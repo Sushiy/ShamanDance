@@ -76,7 +76,7 @@ public class FireBallSpell : ISpell {
             {
                 hasFired = true;
                 rigid.isKinematic = (false);
-                rigid.AddForce(direction.normalized * speed * 2f, ForceMode2D.Impulse);
+                rigid.AddForce(direction.normalized * speed * 3f, ForceMode2D.Impulse);
             }
 		}
         else
@@ -101,6 +101,11 @@ public class FireBallSpell : ISpell {
 
     void OnCollisionEnter2D(Collision2D c)
     {
+        GameObject g = c.gameObject;
+        if(g.CompareTag("SpellTarget"))
+        {
+            g.GetComponent<ISpellTarget>().TakeSpell(SpellType.FIRE);
+        }
         Finalize();
         fireBallExplode.Play();
         sparks.gameObject.SetActive(false);
