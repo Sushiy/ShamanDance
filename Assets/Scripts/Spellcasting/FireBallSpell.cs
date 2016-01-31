@@ -39,7 +39,7 @@ public class FireBallSpell : ISpell {
         canFire = false;
         if (_caster == null)
             _caster = this.gameObject;
-        handTransform = _caster.transform.GetChild(2).GetChild(4);
+        handTransform = _caster.transform.Find("IK").GetChild(4);
         //transform.parent = handTransform;
         rigid = GetComponent<Rigidbody2D>();
 	}
