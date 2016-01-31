@@ -11,22 +11,30 @@ public enum MovementState
 
 
 [RequireComponent (typeof(Rigidbody2D))]
+[RequireComponent (typeof(BoxCollider2D))]
+[RequireComponent (typeof(Spellcaster))]
+[RequireComponent (typeof(DancingArms))]
+[RequireComponent (typeof(Animator))]
+[RequireComponent (typeof(DanceCombos))]
+[RequireComponent (typeof(EdgeCollider2D))]
 public class CharacterMovement : MonoBehaviour
 {
 	// private stuff
+	[SerializeField]
+	private MovementState 	currentState;
 	private Vector3 playerLeft = new Vector3 (-1f, 1f, 1f);
 	private Transform spawnPosition;
-	[SerializeField]
-	private MovementState currentState;
-	private BoxCollider2D _collider;
-	private Rigidbody2D rigidbody;
-	private ParticleSystem spawnEmitter;
 	private float drownTimer;
+	private BoxCollider2D 	_collider;		// body collider for RigidBody
+	private EdgeCollider2D 	_headCollider;	// head collider for Drowning
+	private Rigidbody2D 	rigidbody;
+	private ParticleSystem 	spawnEmitter;
 
 	// public attributes for inspector
     public float movementSpeed 	= 10f;
     public float jumpingSpeed 	= 5f;
 	public float drownTime 		= 1f;
+	public float fallTimer 		= 0f;
     public LayerMask ground_layers;
 	public LayerMask water_layers;
 
@@ -68,6 +76,7 @@ public class CharacterMovement : MonoBehaviour
 		// init
         currentState = MovementState.GROUNDED;
         _collider = GetComponent<BoxCollider2D>();
+		_headCollider = GetComponent<EdgeCollider2D> ();
         rigidbody = GetComponent<Rigidbody2D>();
 		foreach (Animator a in GetComponentsInChildren<Animator>()) {
 			if(a.name == "IK")
@@ -102,13 +111,15 @@ public class CharacterMovement : MonoBehaviour
 
 		// ----------------------------- MOVEMENT STATES -----------------------------
 
-
-        // THOUCH WATER --> DIE!!!!!!!
-        if (Physics2D.OverlapArea(topRight, bottomLeft, water_layers) || (isFalling && rigidbody.velocity.y > 100f)) {
-            currentState = MovementState.DROWNING;
-            drownTimer = Time.fixedTime;
-            rigidbody.freezeRotation = false;
-        }
+		if (isFalling) {
+			fallTimer += Time.fixedDeltaTime;
+			if (fallTimer > 5f) {
+				fallTimer = 0f;
+				Drown ();
+			}
+		} else {
+			fallTimer = 0f;
+		}
 
 		// --- DROWNING ---
 		if (isDrowning) {
@@ -167,6 +178,13 @@ public class CharacterMovement : MonoBehaviour
 		}
 
     }
+
+	public void Drown()
+	{
+		currentState = MovementState.DROWNING;
+		drownTimer = Time.fixedTime;
+		rigidbody.freezeRotation = false;
+	}
 
     void OnDrawGizmos()
     {

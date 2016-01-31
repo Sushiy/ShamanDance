@@ -15,8 +15,11 @@ public class RainSpell : ISpell {
 		cloud = GetComponentInChildren<Animator> (false);
 		cloud.SetTrigger ("CreateCloud");
 
+		float characterLookDirection = (_caster.GetComponent<CharacterMovement> ().isTurnedLeft) ?
+			-5f : +5f;
+
 		Vector3 pos = transform.position;
-		pos.x = _targetPosition.x;
+		pos.x = _caster.transform.position.x + characterLookDirection;
 		pos.y = Camera.main.transform.position.y + Camera.main.orthographicSize/2f - 1.2f;
 
 		transform.position = pos;

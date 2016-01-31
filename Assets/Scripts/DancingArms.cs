@@ -48,8 +48,8 @@ public class DancingArms : MonoBehaviour
 			leftHandT.localPosition = Vector3.Lerp(leftHandT.localPosition, leftIdleT.localPosition + radius * new Vector3(-rx, ry, 0), Time.deltaTime * speed);
 			rightHandT.localPosition = Vector3.Lerp(rightHandT.localPosition, rightIdleT.localPosition + radius * new Vector3(-lx, ly, 0), Time.deltaTime * speed);
 
-			lVector = new Vector2(lx, ly);
-			rVector = new Vector2(rx, ry);
+			lVector = new Vector2(-rx, ry);
+			rVector = new Vector2(-lx, ly);
 		} else {
 			leftHandT.localPosition = Vector3.Lerp(leftHandT.localPosition, leftIdleT.localPosition + radius * new Vector3(lx, ly, 0), Time.deltaTime * speed);
 			rightHandT.localPosition = Vector3.Lerp(rightHandT.localPosition, rightIdleT.localPosition + radius * new Vector3(rx, ry, 0), Time.deltaTime * speed);

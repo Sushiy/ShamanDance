@@ -2,6 +2,7 @@
 using System.Collections;
 
 [RequireComponent (typeof(BoxCollider2D))]
+[RequireComponent (typeof(Rigidbody))]
 public class WaterHole : MonoBehaviour {
 
 	public float _fillHeight;
@@ -33,6 +34,13 @@ public class WaterHole : MonoBehaviour {
 	void OnParticleCollision(GameObject other) {
 		if (other.CompareTag ("Rain") && _fillHeight < 1f) {
 			_fillHeight += 0.005f;
+		}
+	}
+
+	void OnTriggerEnter2D(Collider2D other)
+	{
+		if (other.CompareTag( "Player") && other.GetType() == typeof(EdgeCollider2D) ){
+			other.GetComponent<CharacterMovement> ().Drown ();
 		}
 	}
 }
