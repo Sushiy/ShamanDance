@@ -6,7 +6,8 @@ public enum SpellType
 { 
 	FIRE,
 	RAIN,
-	WIND
+	WIND,
+    NULL
 };
 
 // INTERFACE FOR SPELLS

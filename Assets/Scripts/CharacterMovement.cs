@@ -37,6 +37,7 @@ public class CharacterMovement : MonoBehaviour
 	public bool isDrowning 	 { get { return currentState == MovementState.DROWNING; } }
 	public bool isTurnedLeft { get { return transform.localScale.x == -1f; 		  	} }
 
+    private Animator _anim;
 
     // Use this for initialization
     void Start () 
@@ -68,6 +69,7 @@ public class CharacterMovement : MonoBehaviour
         currentState = MovementState.GROUNDED;
         _collider = GetComponent<BoxCollider2D>();
         rigidbody = GetComponent<Rigidbody2D>();
+        _anim = transform.GetChild(1).GetComponent<Animator>();
 
 		// spawn player
 		Spawn ();
@@ -120,8 +122,8 @@ public class CharacterMovement : MonoBehaviour
 		else if (isGrounded) {
 			// - jump -
 			if (Input.GetButtonDown ("Jump")) {
+                _anim.SetTrigger("Jump");
 				currentState = MovementState.JUMPING;
-				rigidbody.AddForce (new Vector2 (0f, jumpingSpeed / 2f), ForceMode2D.Impulse);
 			}
 
 			// - crab walk -
@@ -130,12 +132,15 @@ public class CharacterMovement : MonoBehaviour
 			if (Input.GetAxis ("LeftTrigger") > 0.5 || Input.GetButton("LeftTrigger")) {
 				sideSpeed = -1f;
 				transform.localScale = playerLeft;
-			} 
+                _anim.SetBool("left", true);
+                _anim.SetBool("isWalking", true);
+            } 
 			// right
 			else if (Input.GetAxis ("RightTrigger") > 0.5 || Input.GetButton("RightTrigger")) {
 				transform.localScale = Vector3.one;
 				sideSpeed = 1f;
-			}
+                _anim.SetBool("isWalking", true);
+            }
 			Vector2 characterVelocity = new Vector2 (sideSpeed * movementSpeed, rigidbody.velocity.y); // where y is gravity 
 			GetComponent<Rigidbody2D> ().velocity = characterVelocity;
 		} 
@@ -149,9 +154,12 @@ public class CharacterMovement : MonoBehaviour
 
 		// --- FALLING --
 		else if (isFalling) {
-			// - ground player -
+            // - ground player -
 			if(Physics2D.OverlapArea(topRight, bottomLeft, ground_layers))
-            	currentState = MovementState.GROUNDED;
+            {
+                currentState = MovementState.GROUNDED;
+                _anim.SetTrigger("Land");
+            }
 		}
 
     }
@@ -168,6 +176,11 @@ public class CharacterMovement : MonoBehaviour
         //Vector2 topLeft = (Vector3)bottomRight + _collider.size.x * Vector3.right + 0.5f * Vector3.up;
         //Gizmos.DrawCube(bottomRight, Vector3.one * 0.5f);
         //Gizmos.DrawCube(topLeft, Vector3.one * 0.5f);
+    }
+
+    public void Jump()
+    {
+        rigidbody.AddForce(new Vector2(0f, jumpingSpeed / 2f), ForceMode2D.Impulse);
     }
 }
 
