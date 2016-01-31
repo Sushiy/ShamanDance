@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent (typeof(AudioSource))]
 public class Tree : MonoBehaviour {
 
     private Vector2 desiredColliderOffset;
@@ -35,9 +36,15 @@ public class Tree : MonoBehaviour {
        
        
         lifeTime -= Time.deltaTime;
-
+		if (lifeTime < 1f) {
+			AudioSource sound = GetComponent<AudioSource> ();
+			if (!sound.isPlaying)
+				sound.Play ();
+		}
         if (lifeTime < 0.0f)
         {
+			
+
             boxCollider.offset = Vector2.Lerp(boxCollider.offset, new Vector2 (boxCollider.offset.x, 0.1f), Time.deltaTime);
             boxCollider.size = Vector2.Lerp(boxCollider.size, new Vector2 (boxCollider.size.x, 0.1f), Time.deltaTime);
             transform.localScale = Vector3.Lerp(transform.localScale, new Vector3 (1f, -1f, 1f), Time.deltaTime);

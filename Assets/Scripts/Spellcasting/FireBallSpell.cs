@@ -107,7 +107,9 @@ public class FireBallSpell : ISpell {
             g.GetComponent<ISpellTarget>().TakeSpell(SpellType.FIRE);
         }
         Finalize();
-        fireBallExplode.Play();
+		fireBallExplode.Play ();
+		if(fireBallSprite.enabled)
+			fireBallExplode.GetComponent<AudioSource> ().Play ();
         sparks.gameObject.SetActive(false);
         fireBallSprite.enabled = false;
     }
